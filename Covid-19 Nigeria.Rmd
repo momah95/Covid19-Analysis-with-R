@@ -1,0 +1,358 @@
+---
+title: "Covid-19 Nigeria"
+author: "Somto Momah"
+date: "4/30/2020"
+output: html_document
+---
+
+```{r}
+#load data
+covid <- read.csv('covid_data.csv')
+daily_cases <- read.csv('cases.csv')
+state_data <- read.csv('state_data.csv')
+Nigeria <- state_data[1:37,1:4]
+```
+
+```{r}
+#view data
+View(covid)
+View(daily_cases)
+View(Nigeria)
+```
+
+```{r}
+#plot of all cases in Nigeria
+daily_cases <- ggplot(daily_cases, aes(x = day , y = cases, colour = "red")) + 
+  theme(legend.position = "none") + 
+  geom_line(size = 1)+ 
+  labs(x = "Day", 
+       y = "Cases", 
+       title = "Daily Cases of Covid-19 in NIgeria")+
+  scale_y_continuous(limits = c(0,390), breaks = seq(0, 390, by = 10))+
+  scale_x_continuous(limits = c(0,75), breaks = seq(0, 75, by = 1))
+```
+
+```{r}
+#viewing the plot
+daily_cases
+```
+
+```{r}
+#daily cases per state
+cases_per_state <- ggplot(covid, aes(x = days , y = cases)) + 
+  geom_line(aes(colour = state), size = 0.5)+ 
+    theme(legend.position = "none") + 
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Daily Cases of Covid-19 per State")+
+  scale_y_continuous(limits = c(0,180), breaks = seq(0, 180, by = 20))+
+  scale_x_continuous(limits = c(0,75), breaks = seq(0, 75, by = 5))+
+  facet_wrap(~state)
+```
+
+```{r}
+#view plot
+cases_per_state
+```
+
+
+```{r}
+#filter for only Lagos 
+Lagos <- filter(covid, state == 'Lagos')
+View(Lagos)
+```
+
+```{r}
+#line plot for cases in Lagos
+Lagos_plot <- ggplot(Lagos, aes( x = days , y = cases)) +
+  geom_line(color = 'Green', size = 1) +
+  theme(legend.position = "none")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Daily Cases of Covid-19 in Lagos")+
+  scale_y_continuous(limits = c(0,185), breaks = seq(0, 185, by = 5))+
+  scale_x_continuous(limits = c(0,75), breaks = seq(0, 75, by = 1))
+Lagos_plot
+```
+
+```{r}
+#filter for cases in FCT and plot
+FCT <- filter(covid, state == 'FCT')
+View(FCT)
+```
+
+```{r}
+fct_plot <- ggplot(FCT, aes( x = days , y = cases)) +
+  geom_line(colour = 'Red', size = 1) +
+  theme(legend.position = "none")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Daily Cases of Covid-19 in FCT")+
+  scale_y_continuous(limits = c(0,60), breaks = seq(0, 60, by = 5))+
+  scale_x_continuous(limits = c(20,75), breaks = seq(20, 75, by = 1))
+fct_plot
+```
+
+```{r}
+#filter for cases in Kano and plot
+Kano <- filter(covid, state == 'Kano')
+```
+
+```{r}
+kano_plot <- ggplot(Kano, aes( x = days , y = cases)) +
+  geom_line(colour = 'Purple', size = 1 ) +
+  theme(legend.position = "none")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Daily Cases of Covid-19 in Kano")+
+  scale_y_continuous(limits = c(0,100), breaks = seq(0, 100, by = 5))+
+  scale_x_continuous(limits = c(45,75), breaks = seq(45, 75, by = 1))
+kano_plot
+```
+
+```{r}
+#filter for 3 states with highest cases
+highest_cases <- filter(covid, state == c('Lagos', 'Kano', 'FCT'))
+highest_cases
+```
+
+```{r}
+highest_cases_plot <- ggplot(highest_cases, aes( x = days , y = cases)) +
+  geom_line(aes(color = state)) +
+  theme(legend.position = "right")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Comparison of top 3 states with covid-19 cases in Nigeria")+
+  scale_y_continuous(limits = c(0,185), breaks = seq(0, 185, by = 5))+
+  scale_x_continuous(limits = c(0,75), breaks = seq(0, 75, by = 1))
+highest_cases_plot
+```
+
+```{r}
+#filter for top 3 states in the North
+north <- filter(covid, state == c('FCT','Kano','Gombe'))
+north
+```
+
+```{r}
+#filter for top 3 states in the west
+west <- filter(covid, state == c('Lagos','Ogun','Osun'))
+west
+```
+
+```{r}
+# #filter for top 3 states in the east
+# east <- filter(covid, state == c('A.Ibom','Enugu','Rivers'))
+# east
+```
+
+```{r}
+#respective plots for regions
+north_cases <- ggplot(north, aes( x = days , y = cases)) +
+  geom_line(aes(color = state)) +
+  theme(legend.position = "right")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Comparison of top 3 Northern states with covid-19 cases in Nigeria")+
+  scale_y_continuous(limits = c(0,100)) +
+  scale_x_continuous(limits = c(30,69) , breaks = seq(30, 69, by = 1))
+
+west_cases <- ggplot(west, aes( x = days , y = cases)) +
+  geom_line(aes(color = state)) +
+  theme(legend.position = "right")+
+  labs(x = "Days", 
+       y = "Cases", 
+       title = "Comparison of top 3 Western states with covid-19 cases in Nigeria")+
+  scale_y_continuous(limits = c(0,90), breaks = seq(0, 90, by = 5))+
+  scale_x_continuous(limits = c(0,69), breaks = seq(0, 69, by = 1))
+
+# east_cases <- ggplot(east, aes( x = days , y = cases)) +
+#   geom_line(aes(color = state)) +
+#   theme(legend.position = "right")+
+#   labs(x = "Days", 
+#        y = "Cases", 
+#        title = "Comparison of top 3 Eastern states with covid-19 cases in Nigeria")+
+#   scale_y_continuous(limits = c(0,90), breaks = seq(0, 90, by = 5))+
+#   scale_x_continuous(limits = c(0,65), breaks = seq(0, 65, by = 5))
+
+north_cases
+west_cases
+#east_cases
+```
+
+```{r}
+#growth rate calc
+growth_rate <- daily_cases %>% 
+  arrange(day) %>%
+  mutate(Diff_day = day - lag(day),
+         Diff_growth = cases - lag(cases),
+         Rate_percent = ((Diff_growth / Diff_day)/lag(cases)) * 100)
+```
+
+```{r}
+View(growth_rate)
+
+#growth_rate <- write.csv(growth_rate, file = 'growth rate.csv')
+```
+
+```{r}
+#average growth rate
+Average_growth = mean(growth_rate$Rate_percent, na.rm = TRUE)
+Average_growth
+#Average_growth <- write.csv(Average_growth, file = 'Average growth rate.csv')
+```
+
+```{r}
+#compound annual growth rate (not 100% sure about this, still checking)
+CAGR <- daily_cases %>%
+      mutate(CAGR = (cases/lag(cases))^(1/(day-lag(day))) - 1)
+View(CAGR)
+#write.csv(CAGR, file = 'CAGR.csv')
+```
+
+```{r}
+# #computing R0
+# cases_with_dates <- read.csv('cases_with_date.csv')
+# 
+# dates <- cases_with_dates$date
+# 
+# GT.corona <- generation.time("gamma", c(2,1))
+# 
+# data(cases_with_dates)
+# 
+# res.R <- estimate.R(cases_with_dates, GT = GT.corona, methods = "EG")
+# 
+# plot(res.R)
+```
+
+```{r}
+#plot of cases,recoveries and deaths across Nigeria
+
+Nigeria_data <- melt(Nigeria)
+
+
+p <- qplot(State, data=Nigeria_data, geom="bar", weight =value, fill = variable) + coord_flip()
+
+p2 <- p + ggtitle('Covid-19 cases in Nigeria') + scale_y_continuous(limits = c(0,3000), breaks = seq(0, 3000, by = 200))
+p3 <- p2 + ylab('Covid cases') 
+  
+p3
+```
+
+
+```{r}
+ld <- read.csv('rona.csv')
+```
+#Calculating the CFR for each state
+```{r}
+cfr <-mutate(ld, cfr=(ld$Deaths)/(ld$Cases))
+#cfr <- write.csv(cfr, file = 'Case Fatality Ratio.csv')
+```
+#calculating the percentage of CFR for each state
+```{r}
+cfr_percent<-mutate(ld, cfr_percentage= ((ld$Deaths)/(ld$Cases)*100))
+#cfr_percent <- write.csv(cfr_percent, file = 'Case Fatality Ratio.csv')
+```
+#Calculating the National CFR
+```{r}
+national_cfr <- sum(ld$Deaths) / sum(ld$Cases)
+#national_cfr <- write.csv(national_cfr, file = 'National Case Fatality Ratio.csv')
+```
+#percentage of National cfr
+```{r}
+per_nat_cfr <- national_cfr * 100
+#per_nat_cfr <- write.csv(per_nat_cfr, file = 'National Case Fatality Ratio.csv')
+```
+
+
+```{r}
+melt_id<- melt(ld)
+
+qplot(State, data=melt_id, geom = "bar", weight=value, fill=variable) + coord_flip()                                                            
+```
+
+
+
+```{r}
+onset <- rep(
+  seq(as.Date('2020-02-27'), as.Date('2020-05-12'), by = 'days'), 
+  times = 1)
+
+```
+#Calculating R using the mean and SD obtained from a report in China
+```{r}
+today <- as.Date('2020-05-12')
+r <- incidence(onset, last_date = today)
+mu <- 3.96
+sigma <- 4.75 
+res <- get_R(r, si_mean = mu, si_sd = sigma)
+plot(res)
+```
+
+```{r}
+plot(res, "lambdas", scale = length(onset) + 1)
+abline(v = onset, lwd = 3, col = "grey")
+abline(v = today, col = "blue", lty = 2, lwd = 2)
+points(onset, seq_along(onset), pch = 20, cex = 3)
+```
+
+```{r}
+R_val <- sample_R(res, 1000)
+quantile(R_val, c(0.025, 0.975))
+
+hist(R_val, border = "yellow", col = "black",
+     xlab = "Values of R",
+     main = "Sample of likely R values")
+```
+
+```{r}
+si <- res$si
+si
+```
+
+```{r}
+future_i <- project(r, R = R_val, n_sim = 1000, si = res$si, n_days = 30)
+predicted_n <- colSums(future_i)
+hist(predicted_n, col = "darkred", border = "white",
+     main = "Prediction: new cases in 30 days",
+     xlab = "Total number of new cases")
+```
+
+
+#Obtaining Ro using the sample tested as population size
+```{r}
+ERN <- est.R0.AR(pop.size=15000, incid=2832)
+ERN
+```
+
+
+
+```{r}
+# # libraries:
+# library(ggplot2)
+# library(gganimate)
+# library(hrbrthemes)
+# 
+# # Keep only 3 names
+# don <- babynames %>% 
+#   filter(name %in% c("Ashley", "Patricia", "Helen")) %>%
+#   filter(sex=="F")
+#   
+# # Plot
+# don %>%
+#   ggplot( aes(x=year, y=n, group=name, color=name)) +
+#     geom_line() +
+#     geom_point() +
+#     scale_color_viridis(discrete = TRUE) +
+#     ggtitle("Popularity of American names in the previous 30 years") +
+#     theme_ipsum() +
+#     ylab("Number of babies born") +
+#     transition_reveal(year)
+# 
+# 
+# 
+# # Save at gif:
+# anim_save("287-smooth-animation-with-tweenr.gif")
+```
+
+
